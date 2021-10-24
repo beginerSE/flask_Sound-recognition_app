@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request,send_file,after_this_request,make_response,jsonify,redirect, url_for, send_from_directory
-import pandas as pd
 import os
 import ffmpeg
 import wave
@@ -11,25 +10,16 @@ import datetime
 
 #APIキーを設定
 key = 'AI~~~'
- 
 # API URL
 DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?version={apiVersion}')
-
-app = Flask(__name__)
-
 UPLOAD_DIR = './uploads'
-ALLOWED_EXTENSIONS = set(['m4a','mp3','wav',])
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
+app = Flask(__name__)
 
 @app.route('/')
 def hello():
     return render_template('index.html')
-
-def allwed_file(filename):
-    # .があるかどうかのチェックと、拡張子の確認
-    # OKなら１、だめなら0
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #APIの情報を返す関数
 def get_speech_service():
@@ -71,9 +61,7 @@ def transcribe_file(speech_file,num):
     print('res', response)
     result_list=[]
     for result in response['results']:
-
         result_list.append(result['alternatives'][0]['transcript'])
-
     return result_list
 
 @app.route('/result', methods=['POST'])
@@ -92,15 +80,11 @@ def uploads_file():
         if file.filename == '':
             make_response(jsonify({'result':'filename must not empty.'}))
 
-
         # ファイルのチェック
         if file and allwed_file(file.filename):
-
             filename = file.filename
-
             # ファイルの保存
             file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-
             stream = ffmpeg.input("uploads/" + filename)
             now = datetime.datetime.now()
             s = now.strftime("%Y%m%d_%H%M%S")
