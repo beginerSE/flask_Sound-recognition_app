@@ -13,6 +13,7 @@ key = 'AI~~~'
 # API URL
 DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?version={apiVersion}')
 UPLOAD_DIR = './uploads'
+ALLOWED_EXTENSIONS = set(['m4a','mp3','wav',])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
@@ -20,6 +21,12 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 @app.route('/')
 def hello():
     return render_template('index.html')
+
+
+def allwed_file(filename):
+    # .があるかどうかのチェックと、拡張子の確認
+    # OKなら１、だめなら0
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #APIの情報を返す関数
 def get_speech_service():
