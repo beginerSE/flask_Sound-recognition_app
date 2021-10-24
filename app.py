@@ -13,9 +13,9 @@ key = 'AI~~~'
 # API URL
 DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?version={apiVersion}')
 UPLOAD_DIR = './uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
 @app.route('/')
 def hello():
